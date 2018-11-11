@@ -30,6 +30,8 @@ matrix:
 
   allow_failures:
     - php: hhvm
+    - env: _PHP=php@7.1
+    - env: _PHP=php@7.2
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${TRAVIS_PHP_VERSION}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
