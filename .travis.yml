@@ -1,4 +1,4 @@
-language: php
+language: generic
 
 matrix:
   fast_finish: true
@@ -17,20 +17,16 @@ matrix:
       php: 'hhvm'
 
     - os: osx
-      language: generic
       env: _PHP=php@5.6
 
     - os: osx
-      language: generic
       env: _PHP=php@7.0
 
     - os: osx
-      language: generic
       env: _PHP=php@7.1
 
     - os: osx
-      language: generic
-      env: _PHP: php@7.2
+      env: _PHP=php@7.2
 
   allow_failures:
     - php: hhvm
@@ -46,11 +42,11 @@ install:
   - php composer.phar install --dev --no-interaction
 
 before_script:
-  - /usr/bin/env bash build/custom_php_ini.sh
+  - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then /usr/bin/env bash build/custom_php_ini.sh; fi
   - mkdir -p build/logs
 
 script:
-  - php vendor/bin/phpunit --configuration phpunit.xml
+  - php vendor/bin/phpunit --coverage-php build/cov/coverage-${component_name}.cov . | grep error
 
 after_script:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then travis_retry php vendor/bin/coveralls -v ; fi

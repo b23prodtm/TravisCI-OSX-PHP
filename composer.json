@@ -1,0 +1,24 @@
+{
+	"name": "b23prodtm/travis-ci-osx-php",
+  "description": "A jumpstart for your PHP build for OSX environment on Travis-CI",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Grzegorz Zdanowski",
+			"homepage": "https://github.com/kiler129"
+		},
+		{
+			"name": "B23:production GNU",
+			"homepage": "https://github.com/b23prodtm"
+		}
+	],
+	"require-dev": {
+		"phpunit/phpunit": "^4",
+    "php-coveralls/php-coveralls": "^2.1",
+    "phpunit/phpcov": "^2.0"
+	},
+  "config": {
+		"vendor-dir": "vendor/",
+		"process-timeout": 0
+	}
+}

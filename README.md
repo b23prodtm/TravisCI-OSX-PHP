@@ -15,16 +15,10 @@ Repository contains `.travis.yml` file for build configuration & few helper scri
  * `build/handle_brew_pkg.sh` - installs or upgrades given package and than links it
  * `build/custom_php_ini.sh` - adds custom `php.ini`. To use this [set environment variable](https://docs.travis-ci.com/user/environment-variables/#Defining-Variables-in-Repository-Settings) named `ADDITIONAL_PHP_INI` pointing to correct file (e.g. `build/.travis.php.ini`)
 
-## Build process
+## Build process [![Build Status](https://travis-ci.org/b23prodtm/TravisCI-OSX-PHP.svg?branch=master)](https://travis-ci.org/b23prodtm/TravisCI-OSX-PHP)
 Build process, in this case, uses so-called "matrix" defined under `matrix -> include` key in `.travis.yml`.
 Example configuration file performs following builds:
- * PHP 5.6 on Linux
- * PHP 7.0 on Linux
+ * PHP 5.6 - 7.0 on Linux
  * PHP [nightly](https://docs.travis-ci.com/user/languages/php#PHP-nightly-builds) on Linux
  * HHVM on Linux (which is allowed to fail)
- * PHP 5.6 on OS X 10.11
- * PHP 7.0 on OS X 10.11
- * PHP 5.6 on OS X 10.10
- * PHP 7.0 on OS X 10.10
- * PHP 5.6 on OS X 10.9
- * PHP 7.0 on OS X 10.9
+ * PHP 5.6 - 7.2 on OSX
