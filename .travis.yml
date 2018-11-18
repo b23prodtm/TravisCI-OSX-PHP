@@ -48,7 +48,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - php vendor/bin/phpunit --coverage-php build/cov/coverage-${component_name}.cov . | grep error
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --stop-on-failure 
 
 after_script:
-  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then travis_retry php vendor/bin/coveralls -v ; fi
+  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then travis_retry php vendor/bin/php-coveralls -v ; fi

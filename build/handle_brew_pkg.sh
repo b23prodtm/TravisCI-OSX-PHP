@@ -28,4 +28,4 @@ else
 fi
 
 echo "Linking installed package..."
-brew link "$1"
+brew link --force "$1"
