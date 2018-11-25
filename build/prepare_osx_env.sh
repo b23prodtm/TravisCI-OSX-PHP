@@ -11,3 +11,5 @@ if [[ "${_PHP}" == "hhvm" ]]; then
     echo "Adding brew HHVM dependencies..."
     brew install hhvm
 fi
+echo "Adding openssl support"
+brew install openssl
