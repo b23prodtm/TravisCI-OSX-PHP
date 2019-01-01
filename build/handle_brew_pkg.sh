@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
-if [[ "$#" -eq 1 ]]; then
-    echo "Handling \"$1\" brew package..."
+pkg=$1$2
+if [[ "$#" > 0 ]]; then
+    echo "Handling \"${pkg}\" brew package..."
 else
     echo "Brew failed - invalid $0 call"
     exit 1;
 fi
 
-if [[ $(brew ls --versions "$1") ]]; then
-    if brew outdated "$1"; then
+if [[ $(brew ls --versions "${pkg}") ]]; then
+    if brew outdated "${pkg}"; then
         echo "Package upgrade is not required, skipping"
     else
         echo "Updating package...";
-        brew upgrade "$1"
+        brew upgrade "${pkg}"
         if [ $? -ne 0 ]; then
             echo "Upgrade failed"
             exit 1
@@ -20,7 +21,7 @@ if [[ $(brew ls --versions "$1") ]]; then
     fi
 else
     echo "Package not available - installing..."
-    brew install "$1"
+    brew install "${pkg}"
     if [ $? -ne 0 ]; then
         echo "Install failed"
         exit 1
@@ -28,4 +29,4 @@ else
 fi
 
 echo "Linking installed package..."
-brew link --force "$1"
+brew link --force "${pkg}"
