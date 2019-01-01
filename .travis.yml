@@ -1,4 +1,4 @@
-language: generic
+language: php
 
 matrix:
   fast_finish: true
@@ -8,7 +8,7 @@ matrix:
       php: '5.6'
 
     - os: linux
-      php: '7.0'
+      php: '7.1'
 
     - os: linux
       php: 'nightly'
@@ -18,9 +18,6 @@ matrix:
 
     - os: osx
       env: _PHP=php@5.6
-
-    - os: osx
-      env: _PHP=php@7.0
 
     - os: osx
       env: _PHP=php@7.1
@@ -48,7 +45,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --stop-on-failure 
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --stop-on-failure
 
 after_script:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then travis_retry php vendor/bin/php-coveralls -v ; fi
