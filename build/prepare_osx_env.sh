@@ -13,3 +13,6 @@ if [[ "${_PHP}" == "hhvm" ]]; then
 fi
 echo "Adding openssl support"
 brew install openssl
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+export LDFLAGS="$LDFLAGS -L/usr/local/opt/openssl/lib"
+export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openssl/include"
