@@ -14,21 +14,23 @@ matrix:
       php: 'nightly'
 
     - os: linux
-      php: 'hhvm'
+      dist: trusty
+      php: 'hhvm' # on Trusty only
 
     - os: osx
+      php: '5.6'
       env: _PHP=php@5.6
 
     - os: osx
+      php: '7.1'
       env: _PHP=php@7.1
 
     - os: osx
+      php: '7.2'
       env: _PHP=php@7.2
 
   allow_failures:
     - php: hhvm
-    - env: _PHP=php@7.1
-    - env: _PHP=php@7.2
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${TRAVIS_PHP_VERSION}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
@@ -41,6 +43,7 @@ install:
   - php composer.phar install --dev --no-interaction
 
 before_script:
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${TRAVIS_PHP_VERSION}" == "hhvm" ]]; then curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar; fi
   - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then /usr/bin/env bash build/custom_php_ini.sh; fi
   - mkdir -p build/logs
 
