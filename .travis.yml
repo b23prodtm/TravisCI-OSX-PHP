@@ -1,5 +1,5 @@
 # language: php # linux only
-language: minimal
+language: bash # cross-platform
 
 os:
     - linux
@@ -23,13 +23,19 @@ matrix:
     - os: linux
       language: php
     - os: osx
-      language: generic
     - os: windows
-      language: bash
+
   allow_failures:
     - env: _PHP=hhvm
     - os: linux
       env: _PHP=7.2 _PKG=php@
+addons:
+  apt:
+    packages:
+      - php5.6
+      - php7.1
+      - php7.2
+    update: true
 
 before_install:
   - /usr/bin/env bash build/prepare_${TRAVIS_OS_NAME}_env.sh
