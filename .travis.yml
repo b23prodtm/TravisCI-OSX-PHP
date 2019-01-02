@@ -17,22 +17,22 @@ env:
     - _PHP=7.0 _PKG=php@
     - _PHP=7.1 _PKG=php@
     - _PHP=7.2 _PKG=php@
-    - _PHP=7.3 _PKG=php@
 
 matrix:
   fast_finish: true
   exclude:
     - os: osx
       env: _PHP=7.0 _PKG=php@
+    - os: windows
+      env: _PHP=7.0 _PKG=php@
     - os: linux
-      env: _PHP=7.1 _PKG=php@
-    - os: linux
-      env: _PHP=7.2 _PKG=php@
-    - os: linux
-      env: _PHP=7.3 _PKG=php@
   include:
     - os: linux
       language: php
+      env: _PHP=7.0 _PKG=php@
+    - os: linux
+      language: php
+      env: _PHP=hhvm
     - os: osx
     - os: windows
   allow_failures:
@@ -41,13 +41,15 @@ matrix:
 addons:
   apt:
     packages:
-      - php5.6
       - php7.0
+      - php7.0-xml
       - hhvm
     update: true
 
 before_install:
   - /usr/bin/env bash build/prepare_${TRAVIS_OS_NAME}_env.sh
+  - if [[ $(which phpenv) > dev/null ]]; then git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build; fi
+  - if [[ $(which phpenv) > dev/null ]]; then phpenv install ${_PHP}; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
   - if [[ "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
 
