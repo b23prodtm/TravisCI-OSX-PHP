@@ -9,6 +9,8 @@ choco update
 if [[ "${_PHP}" == "hhvm" ]]; then
     echo "Cannot install unsupported HHVM dependencies."
 fi
+echo "Adding curl support"
+choco install curl
 echo "Adding openssl support"
 choco install openssl.light
 echo "Adding php support"

@@ -1,5 +1,5 @@
 # language: php # linux only
-language: generic
+language: minimal
 
 os:
     - linux
@@ -19,7 +19,13 @@ env:
 
 matrix:
   fast_finish: true
-
+  include:
+    - os: linux
+      language: php
+    - os: osx
+      language: generic
+    - os: windows
+      language: bash
   allow_failures:
     - env: _PHP=hhvm
     - os: linux
