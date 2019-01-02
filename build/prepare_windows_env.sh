@@ -16,3 +16,5 @@ choco install openssl.light
 echo "Adding php support"
 choco install php --version ${_PHP} -my
 export PATH=/c/tools/php$(echo ${_PHP} | cut -c 1,3):$PATH
+git clone git://github.com/phpenv/phpenv.git ~/.phpenv
+echo 'export PATH="$HOME/.phpenv/bin:$PATH"' >> ~/.bash_profile

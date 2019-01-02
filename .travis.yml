@@ -12,7 +12,7 @@ env:
   global:
     - COLLECT_COVERAGE=false
   matrix:
-    - _PHP=hhvm
+    - _PHP=hhvm # developed by facebook
     - _PHP=5.6 _PKG=php@
     - _PHP=7.0 _PKG=php@
     - _PHP=7.1 _PKG=php@
@@ -21,26 +21,29 @@ env:
 
 matrix:
   fast_finish: true
+  exclude:
+    - os: osx
+      env: _PHP=7.0 _PKG=php@
+    - os: linux
+      env: _PHP=7.1 _PKG=php@
+    - os: linux
+      env: _PHP=7.2 _PKG=php@
+    - os: linux
+      env: _PHP=7.3 _PKG=php@
   include:
     - os: linux
       language: php
     - os: osx
     - os: windows
-
   allow_failures:
     - env: _PHP=hhvm
-    - os: linux
-      env: _PHP=7.1 _PKG=php@
-    - os: linux
-      env: _PHP=7.2 _PKG=php@
-      
+
 addons:
   apt:
     packages:
       - php5.6
       - php7.0
-      - php7.2
-      - php7.3
+      - hhvm
     update: true
 
 before_install:
