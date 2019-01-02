@@ -26,12 +26,9 @@ matrix:
       env: _PHP=7.2 _PKG=php@
 
 before_install:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then phpenv global ${_PHP} && composer self-update; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then phpenv --version && composer --version; fi
+  - /usr/bin/env bash build/prepare_${TRAVIS_OS_NAME}_env.sh
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
   - if [[ "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash build/prepare_osx_env.sh ; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then choco install php --version ${_PHP} -my ; fi
 
 install:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
