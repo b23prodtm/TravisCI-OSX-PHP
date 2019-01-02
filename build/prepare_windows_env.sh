@@ -4,7 +4,7 @@ echo "Here's the Windows environment:"
 choco --version
 
 echo "Updating choco..."
-choco update
+choco upgrade
 
 if [[ "${_PHP}" == "hhvm" ]]; then
     echo "Cannot install unsupported HHVM dependencies."
