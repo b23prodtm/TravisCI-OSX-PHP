@@ -10,7 +10,7 @@ if [ ! -f "${ADDITIONAL_PHP_INI}" ]; then
     exit 1
 fi
 
-if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+if [[ ("${TRAVIS_OS_NAME}" == "osx") || ("${TRAVIS_OS_NAME}" == "windows") ]]; then
     if [[ "${_PHP}" == php* ]]; then
         PHP_INI_SCANDIR=$(php --ini | grep "files in" | cut -d " " -f 7)
         mkdir -v -p "${PHP_INI_SCANDIR}"
@@ -18,7 +18,7 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         echo "Added php.ini from ${ADDITIONAL_PHP_INI} to ${PHP_INI_SCANDIR}/travis.ini"
 
     elif [[ "${_PHP}" == hhv* ]]; then
-        echo "--Copy file for HHVM @ OSX--"
+        echo "--Copy file for HHVM @ ${TRAVIS_OS_NAME}--"
     fi
 
 elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
