@@ -47,20 +47,21 @@ addons:
     update: true
 
 before_install:
-  - /usr/bin/env bash build/prepare_${TRAVIS_OS_NAME}_env.sh
+  - build/phpenv_install.sh
+  - build/prepare_${TRAVIS_OS_NAME}_env.sh
   - if [[ $(which phpenv) > dev/null ]]; then git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build; fi
   - if [[ $(which phpenv) > dev/null ]]; then phpenv install ${_PHP}; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
   - if [[ "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
 
 install:
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
 
 before_script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == "hhvm" ]]; then curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar; fi
-  - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then /usr/bin/env bash build/custom_php_ini.sh; fi
+  - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
   - mkdir -p build/logs
 
 script:
