@@ -54,8 +54,6 @@ addons:
 before_install:
   - source build/phpenv_install.sh
   - source build/prepare_${TRAVIS_OS_NAME}_env.sh #; source exports
-  - if [[ "${TRAVIS_OS_NAME}" != "linux" && $(which phpenv) > /dev/null ]]; then git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build; fi
-  - if [[ "${TRAVIS_OS_NAME}" != "linux" && $(which phpenv) > /dev/null ]]; then phpenv install ${_PHP}; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
 

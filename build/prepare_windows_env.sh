@@ -3,8 +3,9 @@
 echo "Here's the Windows environment:"
 echo "Fixing phpenv support"
 export PATH="/c/Program Files/git${PHPENV_ROOT}/libexec:${PATH}"
-choco --version
+eval "$(/c/Program Files/git${PHPENV_ROOT}/libexec/phpenv init -)"
 
+choco --version
 echo "Updating choco..."
 choco upgrade
 
