@@ -11,8 +11,10 @@ choco upgrade
 
 if [[ "${_PHP}" == "hhvm" ]]; then
     echo "Cannot install unsupported HHVM dependencies."
+    choco install php -y --with-openssl
+else
+    choco install php --version ${_PHP} -my --with-openssl
 fi
-choco install php --version ${_PHP} -my --with-openssl
 export PATH="/c/tools/php$(echo ${_PHP} | cut -c 1,3):${PATH}"
 
 echo "Adding openssl support"
