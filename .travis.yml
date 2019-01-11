@@ -11,6 +11,7 @@ dist: xenial
 env:
   global:
     - COLLECT_COVERAGE=false
+    - PHPENV_ROOT=/usr/local/bin/phpenv
   matrix:
     - _PHP=hhvm # developed by facebook
     - _PHP=5.6 _PKG=php@
@@ -22,6 +23,8 @@ matrix:
   fast_finish: true
   exclude:
     - os: osx
+      env: _PHP=5.6 _PKG=php@
+    - os: osx
       env: _PHP=7.0 _PKG=php@
     - os: windows
       env: _PHP=7.0 _PKG=php@
@@ -29,10 +32,12 @@ matrix:
   include:
     - os: linux
       language: php
-      env: _PHP=7.0 _PKG=php@
+      php: '7.0'
+      env: _PHP=7.0 _PKG=php@ PHPENV_ROOT=~/.phpenv
     - os: linux
       language: php
-      env: _PHP=hhvm
+      php: 'hhvm'
+      env: _PHP=hhvm PHPENV_ROOT=~/.phpenv
     - os: osx
     - os: windows
   allow_failures:
@@ -47,12 +52,12 @@ addons:
     update: true
 
 before_install:
-  - build/phpenv_install.sh
-  - build/prepare_${TRAVIS_OS_NAME}_env.sh
-  - if [[ $(which phpenv) > dev/null ]]; then git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build; fi
-  - if [[ $(which phpenv) > dev/null ]]; then phpenv install ${_PHP}; fi
+  - source build/phpenv_install.sh
+  - source build/prepare_${TRAVIS_OS_NAME}_env.sh #; source exports
+  - if [[ "${TRAVIS_OS_NAME}" != "linux" && $(which phpenv) > /dev/null ]]; then git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build; fi
+  - if [[ "${TRAVIS_OS_NAME}" != "linux" && $(which phpenv) > /dev/null ]]; then phpenv install ${_PHP}; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
-  - if [[ "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
 
 install:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
