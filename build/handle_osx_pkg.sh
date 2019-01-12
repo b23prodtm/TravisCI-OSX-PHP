@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-
-pkg=$1$2
 if [[ "$#" > 0 ]]; then
-    echo "Handling \"${pkg}\" brew package..."
+    echo "Handling \"$1\" brew package..."
 else
     echo "Brew failed - invalid $0 call"
     exit 1;
 fi
-
+pkg=$1
+if [[ "$#" > 1 ]]; then
+  pkg="${pkg}@$2"
+fi
 if [[ $(brew ls --versions "${pkg}") ]]; then
     if brew outdated "${pkg}"; then
         echo "Package upgrade is not required, skipping"

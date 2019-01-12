@@ -11,7 +11,7 @@ if [ ! -f "${ADDITIONAL_PHP_INI}" ]; then
 fi
 
 if [[ ("${TRAVIS_OS_NAME}" == "osx") || ("${TRAVIS_OS_NAME}" == "windows") ]]; then
-    if [[ "${_PHP}" == php* ]]; then
+    if [[ "${_PKG}" == php* ]]; then
         PHP_INI_SCANDIR=$(php --ini | grep "files in" | cut -d " " -f 7)
         mkdir -v -p "${PHP_INI_SCANDIR}"
         cat "${ADDITIONAL_PHP_INI}" > "${PHP_INI_SCANDIR}/travis.ini"
