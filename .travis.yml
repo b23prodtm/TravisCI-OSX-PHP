@@ -45,6 +45,8 @@ matrix:
       env: _PHP=hhvm
   allow_failures:
     - env: _PHP=hhvm
+    - os: osx
+      env: _PHP=7.3 _PKG=php@
 
 addons:
   apt:
