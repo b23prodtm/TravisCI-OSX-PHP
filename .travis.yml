@@ -1,40 +1,74 @@
 # language: php # linux only
-language: generic
+language: bash # cross-platform
 
 os:
     - linux
     - osx
+    - windows
 
-dist: trusty
+dist: xenial
 
 env:
-  - _PHP=hhvm
-  - _PHP=5.6 _PKG=php@
-  - _PHP=7.1 _PKG=php@
-  - _PHP=7.2 _PKG=php@
+  global:
+    - COLLECT_COVERAGE=false
+    - PHPENV_ROOT=/usr/local/bin/phpenv
+  matrix:
+    - _PHP=hhvm # developed by facebook
+    - _PHP=5.6 _PKG=php@
+    - _PHP=7.0 _PKG=php@
+    - _PHP=7.1 _PKG=php@
+    - _PHP=7.2 _PKG=php@
+    - _PHP=7.3 _PKG=php@
+
 matrix:
   fast_finish: true
-
+  exclude:
+    - os: osx
+      env: _PHP=5.6 _PKG=php@
+    - os: osx
+      env: _PHP=7.0 _PKG=php@
+    - os: windows
+    - os: linux
+  include:
+    - os: linux
+      language: php
+      php: '7.0'
+      env: _PHP=7.0 _PKG=php@ PHPENV_ROOT=~/.phpenv
+    - os: linux
+      language: php
+      php: 'hhvm'
+      env: _PHP=hhvm PHPENV_ROOT=~/.phpenv
+    - os: osx
+    - os: windows
+      env: _PHP=7.3 _PKG=php@
+    - os: windows
+      env: _PHP=hhvm
   allow_failures:
     - env: _PHP=hhvm
-    - os: linux
-      env: _PHP=7.2 _PKG=php@
+    - env: _PHP=7.3 _PKG=php@
+
+addons:
+  apt:
+    packages:
+      - php7.0
+      - php7.0-xml
+      - hhvm
+    update: true
 
 before_install:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then phpenv global ${_PHP} && composer self-update; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then phpenv --version && composer --version; fi
+  - source build/phpenv_install.sh
+  - source build/prepare_${TRAVIS_OS_NAME}_env.sh #; source exports
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
-  - if [[ "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash build/prepare_osx_env.sh ; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
 
 install:
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then /usr/bin/env bash build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then build/handle_brew_pkg.sh "${_PKG}" "${_PHP}" ; fi
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
 
 before_script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == "hhvm" ]]; then curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar; fi
-  - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then /usr/bin/env bash build/custom_php_ini.sh; fi
+  - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
   - mkdir -p build/logs
 
 script:
