@@ -17,3 +17,4 @@ export PATH="/usr/local/opt/openssl/bin:$PATH"
 export LDFLAGS="$LDFLAGS -L/usr/local/opt/openssl/lib"
 export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openssl/include"
 export PKG_CONFIG_PATH="/usr/local/opt/curl-openssl/lib/pkgconfig"
+export ADDITIONAL_PHP_INI=build/.travis_osx.php.ini
