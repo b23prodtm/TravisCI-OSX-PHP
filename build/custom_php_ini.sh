@@ -12,15 +12,13 @@ fi
 
 if [[ ("${TRAVIS_OS_NAME}" == "osx") || ("${TRAVIS_OS_NAME}" == "windows") ]]; then
     if [[ "${_PKG}" == php* ]]; then
-        PHP_INI_SCANDIR=$(php --ini | grep "files in" | cut -d " " -f 7)
-        mkdir -v -p "${PHP_INI_SCANDIR}"
-        cat "${ADDITIONAL_PHP_INI}" > "${PHP_INI_SCANDIR}/travis.ini"
-        echo "Added php.ini from ${ADDITIONAL_PHP_INI} to ${PHP_INI_SCANDIR}/travis.ini"
+        phpenv config-add "${ADDITIONAL_PHP_INI}"
+        echo "Added php.ini from ${ADDITIONAL_PHP_INI} to phpenv"
 
     elif [[ "${_PHP}" == hhv* ]]; then
-        echo "--Copy file for HHVM @ ${TRAVIS_OS_NAME}--"
+        cat build/.travis.php.ini >> /etc/hhvm/php.ini
+        echo "Added php.ini content from ${ADDITIONAL_PHP_INI} to /etc/hhvm/php.ini"
     fi
-
 elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${TRAVIS_PHP_VERSION}" == php* ]]; then
         phpenv config-add "${ADDITIONAL_PHP_INI}"
