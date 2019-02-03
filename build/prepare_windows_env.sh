@@ -19,4 +19,8 @@ phpenv() {
     command phpenv "$command" "$@";;
   esac
 }
+echo "Downloading cacert.pem..."
+curl -sSL http://curl.haxx.se/ca/cacert.pem >> cacert.pem
+mkdir -p /usr/local/etc/openssl/certs
+mv -v cacert.pem /usr/local/etc/openssl/certs
 export ADDITIONAL_PHP_INI=build/.travis_windows.php.ini
