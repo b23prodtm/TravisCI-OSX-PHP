@@ -22,3 +22,4 @@ curl -sSL http://curl.haxx.se/ca/cacert.pem >> cacert.pem
 mkdir -p /usr/local/etc/openssl/certs
 mv -v cacert.pem /usr/local/etc/openssl/certs
 export ADDITIONAL_PHP_INI=build/.travis_osx.php.ini
+echo "openssl.cafile=/usr/local/etc/openssl/certs/cacert.pem" >> ${ADDITIONAL_PHP_INI}
