@@ -10,22 +10,11 @@ if [ ! -f "${ADDITIONAL_PHP_INI}" ]; then
     exit 1
 fi
 
-if [[ ("${TRAVIS_OS_NAME}" == "osx") || ("${TRAVIS_OS_NAME}" == "windows") ]]; then
-    if [[ "${_PKG}" == php* ]]; then
-        cat "${ADDITIONAL_PHP_INI}" >> /etc/php.ini
-        echo "Added php.ini from ${ADDITIONAL_PHP_INI} to /etc/php.ini"
+if [[ "${_PKG}" == php* ]]; then
+    sudo cat "${ADDITIONAL_PHP_INI}" >> /etc/php.ini
+    echo "Added php.ini from ${ADDITIONAL_PHP_INI} to /etc/php.ini"
 
-    elif [[ "${_PHP}" == hhv* ]]; then
-        cat "${ADDITIONAL_PHP_INI}" >> /etc/hhvm/php.ini
-        echo "Added php.ini content from ${ADDITIONAL_PHP_INI} to /etc/hhvm/php.ini"
-    fi
-elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-    if [[ "${TRAVIS_PHP_VERSION}" == php* ]]; then
-        phpenv config-add "${ADDITIONAL_PHP_INI}"
-        echo "Added php.ini from ${ADDITIONAL_PHP_INI} to phpenv"
-
-    elif [[ "${TRAVIS_PHP_VERSION}" == hhv* ]]; then
-        cat "${ADDITIONAL_PHP_INI}" >> /etc/hhvm/php.ini
-        echo "Added php.ini content from ${ADDITIONAL_PHP_INI} to /etc/hhvm/php.ini"
-    fi
+elif [[ "${_PHP}" == hhv* ]]; then
+    sudo cat "${ADDITIONAL_PHP_INI}" >> /etc/hhvm/php.ini
+    echo "Added php.ini content from ${ADDITIONAL_PHP_INI} to /etc/hhvm/php.ini"
 fi
