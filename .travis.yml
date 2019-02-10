@@ -65,7 +65,7 @@ before_install:
 install:
   - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "openssl.light"; fi
   - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-openssl"; fi
-  - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer" && composer install --dev --no-interaction; fi
+  - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer"; bash -c 'composer install --dev --no-interaction'; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction; fi
 
 before_script:
