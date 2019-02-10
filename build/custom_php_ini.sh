@@ -11,12 +11,12 @@ if [ ! -f "${ADDITIONAL_PHP_INI}" ]; then
 fi
 
 if [[ "${_PKG}" == php* ]]; then
-    touch /etc/php.ini
-    cat "${ADDITIONAL_PHP_INI}" >> /etc/php.ini
+    sudo touch /etc/php.ini
+    sudo bash -c "cat ${ADDITIONAL_PHP_INI} >> /etc/php.ini"
     echo "Added php.ini from ${ADDITIONAL_PHP_INI} to /etc/php.ini"
 
 elif [[ "${_PHP}" == hhv* ]]; then
-    touch /etc/hhvm/php.ini
-    cat "${ADDITIONAL_PHP_INI}" >> /etc/hhvm/php.ini
+    sudo touch /etc/hhvm/php.ini
+    sudo bash -c "cat ${ADDITIONAL_PHP_INI} >> /etc/hhvm/php.ini"
     echo "Added php.ini content from ${ADDITIONAL_PHP_INI} to /etc/hhvm/php.ini"
 fi

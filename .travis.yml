@@ -44,6 +44,7 @@ matrix:
     - os: windows
       env: _PHP=hhvm
   allow_failures:
+    - php: 'hhvm'
     - env: _PHP=hhvm
     - env: _PHP=7.3 _PKG=php
 
