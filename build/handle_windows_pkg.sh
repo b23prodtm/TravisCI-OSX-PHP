@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$#" > 1 ]]; then
+if [[ "$#" > 0 ]]; then
     echo "Handling \"$1\" brew package..."
 else
     echo "Brew failed - invalid $0 call"
