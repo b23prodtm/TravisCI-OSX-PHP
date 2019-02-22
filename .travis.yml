@@ -14,7 +14,6 @@ env:
     - PHPENV_ROOT=/usr/local/bin/phpenv
   matrix:
     - _PHP=hhvm # developed by facebook
-    - _PHP=7.0 _PKG=php
     - _PHP=7.1 _PKG=php
     - _PHP=7.2 _PKG=php
     - _PHP=7.3 _PKG=php
@@ -22,15 +21,13 @@ env:
 matrix:
   fast_finish: true
   exclude:
-    - os: osx
-      env: _PHP=7.0 _PKG=php
     - os: windows
     - os: linux
   include:
     - os: linux
       language: php
-      php: '7.0'
-      env: _PHP=7.0 _PKG=php PHPENV_ROOT=~/.phpenv
+      php: 7.1
+      env: _PHP=7.1 _PKG=php PHPENV_ROOT=~/.phpenv
     - os: linux
       language: php
       php: 'hhvm'
