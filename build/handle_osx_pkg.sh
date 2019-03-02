@@ -6,7 +6,7 @@ else
     exit 1;
 fi
 pkg=$1
-if [[ "$#" > 1 ]]; then
+if [[ "$#" > 1  && $2 != "latest" ]]; then
   pkg="${pkg}@$2"
 fi
 if [[ $(brew ls --versions "${pkg}") ]]; then

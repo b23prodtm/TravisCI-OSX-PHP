@@ -7,10 +7,6 @@ brew --version
 echo "Updating brew..."
 brew update
 
-if [[ "${_PHP}" == "hhvm" ]]; then
-    echo "Adding brew HHVM dependencies..."
-    brew install hhvm
-fi
 echo "Adding openssl support"
 export PATH="/usr/local/opt/openssl/bin:$PATH"
 export LDFLAGS="$LDFLAGS -L/usr/local/opt/openssl/lib"
