@@ -23,4 +23,4 @@ case "$pkg" in
     export PATH="/c/tools/php$(echo ${pkg} | cut -c 1,3):${PATH}";;
   *) choco install $pkg -my $args;;
 esac
-powershell refreshenv
+powershell refreshenv&
