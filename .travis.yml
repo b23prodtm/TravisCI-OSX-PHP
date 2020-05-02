@@ -6,7 +6,7 @@ os:
     - osx
     - windows
 
-dist: xenial
+dist: trusty
 
 env:
   global:
@@ -14,7 +14,7 @@ env:
     - PHPENV_ROOT=/usr/local/bin/phpenv
     - _SSL=openssl
   matrix:
-    - _PHP=latest _PKG=hhvm # developed by facebook
+    - _PHP=latest _PKG=hhvm # developed by facebook, trusty only
     - _PHP=7.1 _PKG=php
     - _PHP=7.2 _PKG=php
     - _PHP=7.3 _PKG=php
