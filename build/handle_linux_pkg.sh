@@ -10,11 +10,11 @@ if [[ "$#" > 1  && $2 != "latest" ]]; then
   pkg="${pkg}@$2"
 fi
 DEBIAN_FRONTEND="noninteractive"
-apt-get update && \
-apt-get install -y \
+sudo apt-get update && \
+sudo apt-get install -y \
  $pkg && \
 echo "**** cleanup ****" && \
-rm -rf \
+sudo rm -rf \
  /tmp/* \
  /var/lib/apt/lists/* \
  /var/tmp/*
