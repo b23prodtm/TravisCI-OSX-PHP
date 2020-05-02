@@ -14,10 +14,9 @@ env:
     - PHPENV_ROOT=/usr/local/bin/phpenv
     - _SSL=openssl
   matrix:
-    - _PHP=latest _PKG=hhvm # developed by facebook, trusty only
-    - _PHP=7.1 _PKG=php
-    - _PHP=7.2 _PKG=php
-    - _PHP=7.3 _PKG=php
+    - _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv # developed by facebook, trusty only
+    - _PHP=7.0 _PKG=php PHPENV_ROOT=~/.phpenv
+    - _PHP=7.4 _PKG=php PHPENV_ROOT=~/.phpenv
 
 matrix:
   fast_finish: true
@@ -25,22 +24,14 @@ matrix:
     - os: windows
   include:
     - os: linux
-      language: php
-      php: 7.1
-      env: _PHP=7.1 _PKG=php PHPENV_ROOT=~/.phpenv
-    - os: linux
-      language: php
-      php: 'hhvm'
-      env: _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv
     - os: osx
     - os: windows
-      env: _PHP=7.3 _PKG=php _SSL=openssl.light
+      env: _PHP=7.4 _PKG=php _SSL=openssl.light
     - os: windows
       env: _PHP=latest _PKG=hhvm _SSL=openssl.light
   allow_failures:
-    - php: 'hhvm'
-    - env: _PHP=latest _PKG=hhvm
-    - env: _PHP=7.3 _PKG=php
+    - env: _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv
+    - env: _PHP=7.4 _PKG=php PHPENV_ROOT=~/.phpenv
     - os: windows
 
 before_install:

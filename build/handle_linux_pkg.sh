@@ -7,7 +7,7 @@ else
 fi
 pkg=$1
 if [[ "$#" > 1  && $2 != "latest" ]]; then
-  pkg="${pkg}@$2"
+  pkg="${pkg}$2"
 fi
 DEBIAN_FRONTEND="noninteractive"
 sudo apt-get update && \
