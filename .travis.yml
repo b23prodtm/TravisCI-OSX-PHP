@@ -20,15 +20,10 @@ env:
 
 matrix:
   fast_finish: true
-  exclude:
-    - os: windows
   include:
     - os: linux
     - os: osx
     - os: windows
-      env: _PHP=7.4 _PKG=php _SSL=openssl.light
-    - os: windows
-      env: _PHP=latest _PKG=hhvm _SSL=openssl.light
   allow_failures:
     - env: _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv
     - env: _PHP=7.4 _PKG=php PHPENV_ROOT=~/.phpenv
@@ -42,10 +37,11 @@ before_install:
   - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
 
 install:
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}"; [ $(which c_rehash) > /dev/null ] && c_rehash
+  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export _SSL=openssl.light; fi
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}" "latest"; [ $(which c_rehash) > /dev/null ] && c_rehash
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-openssl"
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
-  - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer"; bash -c 'composer install --dev --no-interaction'; fi
+  - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer" "latest"; bash -c 'composer install --dev --no-interaction'; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction; fi
 
 before_script:

@@ -6,21 +6,26 @@ else
     echo "Brew failed - invalid $0 call"
     exit 1;
 fi
-pkg=$1
-version=$2
-args=$3
+pkg=()
+while [[ "$#" > 2 ]]; do
+  case "$1" in
+    hhvm)
+        echo "[NOTE] Cannot install unsupported HHVM dependencies."
+        pkg+=("$1 -y $2 $3")
+        ;;
+    php)
+        pkg+=("$1 --version $2 -my $3")
+        export PATH="/c/tools/php$(echo ${pkg} | cut -c 1,3):${PATH}"
+        ;;
+    *)
+        pkg+=("$1 -my $3");;
+  esac;shift;shift
+done
 choco --version
 echo "Updating choco..."
 choco upgrade
-echo "Adding ${pkg} support"
-case "$pkg" in
-  "hhvm")
-    echo "Cannot install unsupported HHVM dependencies."
-    args="${version} ${args}"
-    choco install $pkg -y $args;;
-  "php")
-    choco install $pkg --version $version -my $args
-    export PATH="/c/tools/php$(echo ${pkg} | cut -c 1,3):${PATH}";;
-  *) choco install $pkg -my $args;;
-esac
+echo "Adding ${pkg[@]} support"
+for p in "${pkg[@]}"; do
+    choco install $p
+done
 powershell refreshenv&
