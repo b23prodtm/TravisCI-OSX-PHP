@@ -51,7 +51,7 @@ before_install:
   - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
 
 install:
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}"; /usr/local/opt/openssl/bin/c_rehash
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}"; [ $(which c_rehash) > /dev/null ] && c_rehash
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-openssl"
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
   - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer"; bash -c 'composer install --dev --no-interaction'; fi
