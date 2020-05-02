@@ -23,7 +23,6 @@ matrix:
   fast_finish: true
   exclude:
     - os: windows
-    - os: linux
   include:
     - os: linux
       language: php
