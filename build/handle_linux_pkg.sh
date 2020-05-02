@@ -7,21 +7,23 @@ else
 fi
 pkg=()
 while [[ "$#" > 1 ]]; do
-  case "$1" in
-    --*) pkg+=("$1"); shift;;
-    *);;
-  esac
   case "$2" in
     latest)
-        pkg+=("$1");;
+        pkg+=([$1]="$1");;
     *)
-        pkg+=("$1$2");;
-  esac;shift;shift
+        pkg+=([$1]="$1$2");;
+  esac;
+  if [[ "$#" > 2 ]]; then
+    case "$3" in
+      --*) pkg[$1]="${pkg[$1]} $3"; shift;;
+      *);;
+    esac;
+  fi;shift 2
 done
 DEBIAN_FRONTEND="noninteractive"
 sudo apt-get update && \
 sudo apt-get install -y \
- "${pkg[@]}" && \
+ "${pkg[*]}" && \
 echo "**** cleanup ****" && \
 sudo rm -rf \
  /tmp/* \

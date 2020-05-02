@@ -8,33 +8,38 @@ fi
 pkg=()
 while [[ "$#" > 1 ]]; do
   case "$1" in
-    --*) pkg+=("$1"); shift;;
+    php) set -- "$1" $(echo "$2" | awk 'BEGIN { FS="." } { print $1$2 }') "${@:3}";;
     *);;
   esac
   case "$2" in
+    *-xml);;
     latest)
-        pkg+=("$1");;
+        pkg+=([$1]="$1");;
     *)
-        pkg+=("$1@$2");;
-  esac;shift;shift
+        pkg+=([$1]="$1@$2");;
+  esac;
+  if [[ "$#" > 2 ]]; then 
+    case "$3" in
+      --*) pkg[$1]="${pkg[$1]} $3"; shift;;
+      *);;
+    esac;
+  fi;shift 2
 done
 if [[ $(brew ls --versions "${pkg}") ]]; then
-    if brew outdated "${pkg[@]}"; then
+    if brew outdated "${!pkg[*]}"; then
         echo "Package upgrade is not required, skipping"
     else
         echo "Updating package...";
-        brew upgrade "${pkg[@]}"
+        brew upgrade "${!pkg[*]}"
         if [ $? -ne 0 ]; then
             echo "Upgrade failed"
-            exit 1
         fi
     fi
 else
     echo "Package not available - installing..."
-    brew install "${pkg[@]}"
+    brew install "${pkg[*]}"
     if [ $? -ne 0 ]; then
         echo "Install failed"
-        exit 1
     fi
 fi
 

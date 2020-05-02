@@ -7,7 +7,10 @@ os:
     - windows
 
 dist: trusty
-
+addons:
+  apt:
+    sources:
+      - ppa:ondrej/php
 env:
   global:
     - COLLECT_COVERAGE=false
@@ -15,8 +18,8 @@ env:
     - _SSL=openssl
   matrix:
     - _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv # developed by facebook, trusty only
-    - _PHP=7.0 _PKG=php PHPENV_ROOT=~/.phpenv
-    - _PHP=7.4 _PKG=php PHPENV_ROOT=~/.phpenv
+    - _PHP=7.2 _PKG=php PHPENV_ROOT=~/.phpenv
+    - _PHP=7.3 _PKG=php PHPENV_ROOT=~/.phpenv
 
 matrix:
   fast_finish: true
@@ -26,7 +29,8 @@ matrix:
     - os: windows
   allow_failures:
     - env: _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv
-    - env: _PHP=7.4 _PKG=php PHPENV_ROOT=~/.phpenv
+    - env: _PHP=7.2 _PKG=php PHPENV_ROOT=~/.phpenv
+    - env: _PHP=7.3 _PKG=php PHPENV_ROOT=~/.phpenv
     - os: windows
 
 before_install:
@@ -41,7 +45,6 @@ install:
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}" "latest"; [ $(which c_rehash) > /dev/null ] && c_rehash
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-openssl"
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
-  - if [[ "${TRAVIS_OS_NAME}" != "linux" ]]; then build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer" "latest"; bash -c 'composer install --dev --no-interaction'; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction; fi
 
 before_script:
