@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [[ "$#" > 1 ]]; then
-    echo "Handling \"$1\" brew package..."
+    echo "Handling \"$*\" brew package..."
 else
     echo "Brew failed - invalid $0 call"
     exit 1;
@@ -8,40 +8,32 @@ fi
 pkg=()
 while [[ "$#" > 1 ]]; do
   case "$1" in
-    php) set -- "$1" $(echo "$2" | awk 'BEGIN { FS="." } { print $1$2 }') "${@:3}";;
-    *);;
+    php) pkg+=([$1]="$1@$(echo $2 | awk 'BEGIN { FS=\".\" } { print $1$2 }')");;
+    *) pkg+=([$1]="$1");;
   esac
-  case "$2" in
-    *-xml);;
-    latest)
-        pkg+=([$1]="$1");;
-    *)
-        pkg+=([$1]="$1@$2");;
-  esac;
-  if [[ "$#" > 2 ]]; then 
+  if [[ "$#" > 2 ]]; then
     case "$3" in
-      --*) pkg[$1]="${pkg[$1]} $3"; shift;;
+      --*)shift;;
       *);;
     esac;
-  fi;shift 2
+  fi
+  shift 2
 done
-if [[ $(brew ls --versions "${pkg}") ]]; then
-    if brew outdated "${!pkg[*]}"; then
-        echo "Package upgrade is not required, skipping"
-    else
-        echo "Updating package...";
-        brew upgrade "${!pkg[*]}"
-        if [ $? -ne 0 ]; then
-            echo "Upgrade failed"
-        fi
-    fi
-else
-    echo "Package not available - installing..."
-    brew install "${pkg[*]}"
-    if [ $? -ne 0 ]; then
-        echo "Install failed"
-    fi
+if [[ $(brew ls --versions "${!pkg[*]}") ]]; then
+  echo "Package(s) need update, uninstalling...";
+  brew uninstall "${pkg[*]}"
+  if [ $? -ne 0 ]; then
+      echo "Uninstall failed"
+  fi
 fi
-
-echo "Linking installed package..."
-brew link --force "${pkg[@]}"
+if brew outdated "${pkg[*]}"; then
+    echo "Package(s) update is not required, skipping"
+else
+  echo "Package(s) ${!pkg[*]} not available - installing..."
+  brew install "${pkg[*]}"
+  if [ $? -ne 0 ]; then
+      echo "Install failed"
+  fi
+fi
+echo "Linking ${pkg[*]} package(s)..."
+brew link --force "${pkg[*]}"

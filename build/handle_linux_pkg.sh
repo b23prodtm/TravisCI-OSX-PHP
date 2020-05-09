@@ -15,13 +15,13 @@ while [[ "$#" > 1 ]]; do
   esac;
   if [[ "$#" > 2 ]]; then
     case "$3" in
-      --*) pkg[$1]="${pkg[$1]} $3"; shift;;
+      --*) shift;;
       *);;
     esac;
   fi;shift 2
 done
 DEBIAN_FRONTEND="noninteractive"
-sudo apt-get update && \
+sudo apt-get -q update && \
 sudo apt-get install -y \
  "${pkg[*]}" && \
 echo "**** cleanup ****" && \

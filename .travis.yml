@@ -6,18 +6,17 @@ os:
     - osx
     - windows
 
-dist: trusty
+dist: bionic
 addons:
   apt:
     sources:
-      - ppa:ondrej/php
+    - sourceline: ppa:ondrej/php
 env:
   global:
     - COLLECT_COVERAGE=false
     - PHPENV_ROOT=/usr/local/bin/phpenv
     - _SSL=openssl
   matrix:
-    - _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv # developed by facebook, trusty only
     - _PHP=7.2 _PKG=php PHPENV_ROOT=~/.phpenv
     - _PHP=7.3 _PKG=php PHPENV_ROOT=~/.phpenv
 
@@ -39,20 +38,21 @@ before_install:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == 7* ]]; then COLLECT_COVERAGE=true ; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${COLLECT_COVERAGE}" != "true" ]]; then phpenv config-rm xdebug.ini || true ; fi
   - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}" "latest";
+  - if [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then [ $(which c_rehash) > /dev/null ] && sudo c_rehash; fi
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "curl" "latest" "--with-openssl"
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-homebrew-curl"
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
+  - php -i | grep "SSL Version"
+
 
 install:
-  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export _SSL=openssl.light; fi
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}" "latest"; [ $(which c_rehash) > /dev/null ] && c_rehash
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-openssl"
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction; fi
 
 before_script:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" && "${_PHP}" == "hhvm" ]]; then curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar; fi
-  - mkdir -p build/logs
-
 script:
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --stop-on-failure
+  - mkdir -p build/logs
+  - php vendor/bin/phpunit -c phpunit.xml.dist
 
-after_script:
+after_success:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then travis_retry php vendor/bin/php-coveralls -v ; fi
