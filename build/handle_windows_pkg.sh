@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ "$#" > 0 ]]; then
-    echo "Handling \"$1\" choco package..."
+    echo "Handling \"$*\" choco package..."
 else
     echo "Chocolatey failed - missing arguments"
     exit 1;
@@ -10,11 +10,22 @@ pkg=()
 while [[ "$#" > 1 ]]; do
   case "$1" in
     php)
-        pkg+=([$1]="$1 --version $2")
-        export PATH="/c/tools/php$2:${PATH}"
-        ;;
+      # ignore 7.2-xml, and use -> 7.2
+      v=$(echo $2 | awk "BEGIN { FS=\"-\"; } { print \$1 \".0\" }")
+      pkg+=(["$1"]="$1 --version=${v} --package-parameters='\"/DontAddToPath /ThreadSafe /InstallDir:/c/php\"'")
+      # pkg+=(["$1"]="$1 --version=${v} --package-parameters='\"/DontAddToPath /ThreadSafe /InstallDir:/c/php\"'")
+      # bkpIFS="${IFS}"
+      # IFS=':'
+      # P=("/c/tools/php/:${PATH}")
+      # printf "PATH=%s\n" "${P[@]}"
+      # export PATH="${P[@]}"
+      # IFS="${bkpIFS}"
+      ;;
+    composer)
+      pkg["$1"]="$1 --ia '\"/DEV=/c/tools/php /PHP=/c/php\"'"
+      ;;
     *)
-        pkg+=([$1]="$1");;
+      pkg["$1"]="$1";;
   esac
   if [[ "$#" > 2 ]]; then case "$3" in
       --*) shift;;
@@ -25,8 +36,9 @@ done
 choco --version
 echo "Updating choco..."
 choco upgrade chocolatey
-for p in "${!pkg[@]}"; do
-    echo "Adding $p support"
-    choco install "${pkg[$p]}"
+echo "Adding ${!pkg[@]} support..."
+for p in "${pkg[@]}"; do
+    choco install "${p}"
 done
 powershell refreshenv &
+cat /c/ProgramData/chocolatey/logs/chocolatey.log | tail -n 100

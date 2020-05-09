@@ -2,6 +2,8 @@
 
 echo "Here's the Windows environment:"
 echo "Fixing phpenv support"
+bash --version
+
 export PATH="/c/Program Files/git${PHPENV_ROOT}/libexec:${PATH}"
 #phpenv init -
 phpenv rehash 2>/dev/null

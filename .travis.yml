@@ -11,6 +11,9 @@ addons:
   apt:
     sources:
     - sourceline: ppa:ondrej/php
+  homebrew:
+    packages:
+    - bash
 env:
   global:
     - COLLECT_COVERAGE=false
@@ -27,7 +30,6 @@ matrix:
     - os: osx
     - os: windows
   allow_failures:
-    - os: osx
     - os: windows
 
 before_install:
@@ -38,13 +40,14 @@ before_install:
   - if [ ! -z "${ADDITIONAL_PHP_INI}" ]; then build/custom_php_ini.sh; fi
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_SSL}" "latest";
   - if [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then [ $(which c_rehash) > /dev/null ] && sudo c_rehash; fi
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "curl" "latest" "--with-openssl"
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "curl" "latest" "--with-openssl" | tail
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}" "--with-homebrew-curl"
-  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml" | tail
   - php -i | grep "SSL Version"
+  - build/handle_${TRAVIS_OS_NAME}_pkg.sh "composer" "latest" | tail
 
 install:
-  - curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction
+  - composer require --no-interaction
 
 before_script:
 script:

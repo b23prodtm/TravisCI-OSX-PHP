@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-
 echo "Here's the OSX environment:"
 sw_vers
-brew --version
 
-echo "Updating brew..."
-brew update
+echo "Updating bash..."
+brew install bash || true
+brew link --force bash || true
+sudo chsh -s /usr/local/bin/bash $USER
+bash --version
 
 echo "Adding openssl support"
 export PATH="/usr/local/opt/openssl/bin:$PATH"

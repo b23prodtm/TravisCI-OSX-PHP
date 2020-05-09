@@ -12,6 +12,7 @@ echo "**** cleanup ****" && \
 sudo rm -rf \
  /tmp/* \
  /var/lib/apt/lists/* \
- /var/tmp/*
+ /var/tmp/* \
+ | tail -n 100
 phpenv versions
 export ADDITIONAL_PHP_INI=build/.travis_linux.php.ini

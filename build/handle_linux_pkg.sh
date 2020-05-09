@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [[ "$#" > 0 ]]; then
-    echo "Handling \"$@\" apt packages..."
+    echo "Handling \"$*\" apt packages..."
 else
     echo "Apt failed - invalid $0 call"
     exit 1;
@@ -9,9 +9,9 @@ pkg=()
 while [[ "$#" > 1 ]]; do
   case "$2" in
     latest)
-        pkg+=([$1]="$1");;
+        pkg["$1"]="$1";;
     *)
-        pkg+=([$1]="$1$2");;
+        pkg["$1"]="$1$2";;
   esac;
   if [[ "$#" > 2 ]]; then
     case "$3" in
@@ -23,7 +23,7 @@ done
 DEBIAN_FRONTEND="noninteractive"
 sudo apt-get -q update && \
 sudo apt-get install -y \
- "${pkg[*]}" && \
+ "${pkg[@]}" && \
 echo "**** cleanup ****" && \
 sudo rm -rf \
  /tmp/* \
