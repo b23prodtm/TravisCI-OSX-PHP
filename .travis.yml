@@ -27,9 +27,7 @@ matrix:
     - os: osx
     - os: windows
   allow_failures:
-    - env: _PHP=latest _PKG=hhvm PHPENV_ROOT=~/.phpenv
-    - env: _PHP=7.2 _PKG=php PHPENV_ROOT=~/.phpenv
-    - env: _PHP=7.3 _PKG=php PHPENV_ROOT=~/.phpenv
+    - os: osx
     - os: windows
 
 before_install:
@@ -45,9 +43,8 @@ before_install:
   - build/handle_${TRAVIS_OS_NAME}_pkg.sh "${_PKG}" "${_PHP}-xml"
   - php -i | grep "SSL Version"
 
-
 install:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction; fi
+  - curl -s http://getcomposer.org/installer | php && php composer.phar install --dev --no-interaction
 
 before_script:
 script:

@@ -14,7 +14,7 @@ while [[ "$#" > 1 ]]; do
         export PATH="/c/tools/php$2:${PATH}"
         ;;
     *)
-        pkg+=([$1]="$1";;
+        pkg+=([$1]="$1");;
   esac
   if [[ "$#" > 2 ]]; then case "$3" in
       --*) shift;;
