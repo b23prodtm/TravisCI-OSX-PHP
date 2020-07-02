@@ -15,7 +15,7 @@ else
   sudo='sudo'
 fi
 if [[ "${_PKG}" == php* ]]; then
-    exec $sudo touch /etc/php.ini
-    exec $sudo bash -c "cat ${ADDITIONAL_PHP_INI} >> /etc/php.ini"
+    bash -c "$sudo touch /etc/php.ini"
+    bash -c "$sudo cat ${ADDITIONAL_PHP_INI} >> /etc/php.ini"
     echo "Added php.ini from ${ADDITIONAL_PHP_INI} to /etc/php.ini"
 fi
