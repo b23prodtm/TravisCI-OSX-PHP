@@ -3,7 +3,7 @@ echo "Here's the OSX environment:"
 sw_vers
 
 echo "Updating bash..."
-brew install bash || true
+brew install --build-from-source bash || true
 brew link --force bash || true
 sudo chsh -s /usr/local/bin/bash $USER
 bash --version
